@@ -1,40 +1,18 @@
 import { useReducer } from 'react';
+import { CounterState } from './interfaces/interfaces';
+import { counterReducer } from './state/counterReducer';
+import { actions } from './actions/actions';
 
-interface CounterState {
-  counter: number;
-  previous: number;
-  changes: number;
-}
+// ! 1) Click en boton de agregar 1 ejecuta handleAdd
+// ! 2) La funcion despacha (dispatch del useReducer) una accion, en este caso actions.doIncrease
+// ! 3) doIncrease (creador de accion) dice que devuelve el tipo 'increaseBy' y el payload (en este caso un numero) enviado desde handleAdd
+// ! 4) Llega a la funcion del reducer (counterReducer) y esta segun el tipo, ejecuta la accion. Si tiene payload, lo usa.
 
 const INITIAL_STATE: CounterState = {
   counter: 0, // valor actual
   previous: 0, // valor previo
   changes: 0, // cantidad de cambios
 };
-
-const ACTION_TYPE: string = 'increseBy';
-
-type CounterAction = | { type: 'increseBy', payload: { value: number }  } | { type: 'reset' }
-
-const counterReducer = (state: CounterState, action: CounterAction): CounterState => {
-  switch (action.type) {
-    case 'increseBy':
-      return {
-        counter: state.counter + action.payload.value,
-        previous: state.counter,
-        changes: state.changes
-      }
-    case 'reset':
-      return {
-        counter: 0,
-        previous: state.counter,
-        changes: state.changes
-      }
-  
-    default:
-      return state
-  }
-}
 
 export const CounterReducerComponent = () => {
 
@@ -46,11 +24,11 @@ export const CounterReducerComponent = () => {
   const [counter, dispatch] = useReducer(counterReducer, INITIAL_STATE)
 
     const handleAdd = (addingValue: number) => {
-        dispatch({type: 'increseBy', payload: { value: addingValue } })
+        dispatch( actions.doIncrease(addingValue) )
     };
 
     const handleReset = () => {
-        dispatch({type: 'reset' })
+        dispatch( actions.doReset() )
     };
 
   return (
